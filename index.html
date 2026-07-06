@@ -6,6 +6,14 @@
     <title>Karthik Urala | Data & Cloud Engineer</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4ZQ1EZ90DV"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-4ZQ1EZ90DV');
+    </script>
     <style>
         :root {
             --bg: #0a0a0f;
@@ -224,12 +232,54 @@
         .nav-brand { font-size: 14px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--text); transition: color 0.5s; }
         .nav-location { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); transition: color 0.5s; }
 
-        /* ========== NAV VIEW COUNTER (Below Ottawa, Canada) ========== */
+        .nav-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
+        .nav-timeline-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: var(--counter-bg);
+            border: 1px solid var(--counter-border);
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+        .nav-timeline-toggle:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+        .nav-timeline-toggle i {
+            font-size: 10px;
+            transition: transform 0.3s ease;
+        }
+        .nav-timeline-toggle:hover i {
+            transform: rotate(15deg);
+        }
+        .nav-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
         .nav-view-counter {
             display: flex;
             align-items: center;
             gap: 6px;
-            margin-top: 6px;
+            margin-top: 2px;
             font-size: 11px;
             color: var(--text-muted);
             letter-spacing: 1px;
@@ -249,14 +299,6 @@
             color: var(--accent);
             transition: color 0.5s;
             font-variant-numeric: tabular-nums;
-        }
-        .nav-view-counter .nav-counter-value.counting {
-            animation: countPop 0.3s ease;
-        }
-        @keyframes countPop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
         }
 
         .hero {
@@ -480,6 +522,199 @@
         .edu-year { font-size: 14px; color: var(--text-muted); text-align: right; white-space: nowrap; transition: color 0.5s; }
         .edu-year .year { font-size: 28px; font-weight: 800; color: var(--accent); display: block; line-height: 1; transition: color 0.5s; }
 
+        /* ========== TIMELINE SECTION ========== */
+        .timeline-section {
+            padding: 120px 60px;
+            scroll-snap-align: start;
+            position: relative;
+            overflow: hidden;
+        }
+        .timeline-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at 20% 50%, var(--hero-radial) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 80%, rgba(74,158,255,0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .timeline-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .timeline-header {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+            z-index: 2;
+        }
+        .timeline-header .about-label { margin-bottom: 16px; }
+        .timeline-header .about-title { margin-bottom: 16px; }
+        .timeline-header p {
+            color: var(--text-muted);
+            font-size: 16px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .timeline-track {
+            position: relative;
+            padding: 20px 0;
+        }
+        .timeline-track::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, 
+                transparent 0%, 
+                var(--accent) 10%, 
+                var(--primary) 50%, 
+                var(--accent) 90%, 
+                transparent 100%);
+            transform: translateX(-50%);
+            opacity: 0.3;
+        }
+        .timeline-item {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+        .timeline-item.reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .timeline-item:nth-child(odd) { flex-direction: row-reverse; }
+        .timeline-item:nth-child(odd) .timeline-content { margin-right: 60px; margin-left: 0; }
+        .timeline-item:nth-child(odd) .timeline-dot { left: auto; right: 50%; margin-right: -8px; }
+        .timeline-item:nth-child(even) .timeline-content { margin-left: 60px; }
+        .timeline-item:nth-child(even) .timeline-dot { left: 50%; margin-left: -8px; }
+        .timeline-dot {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 3px solid var(--bg);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+            z-index: 3;
+            flex-shrink: 0;
+            animation: dotPulse 2s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+        .timeline-item:hover .timeline-dot {
+            transform: scale(1.3);
+            box-shadow: 0 0 0 8px var(--accent-glow), 0 0 20px var(--accent-glow);
+        }
+        @keyframes dotPulse {
+            0%, 100% { box-shadow: 0 0 0 4px var(--accent-glow); }
+            50% { box-shadow: 0 0 0 8px rgba(233,69,96,0.1); }
+        }
+        .timeline-content {
+            flex: 1;
+            max-width: 420px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        .timeline-item:hover .timeline-content::before { transform: scaleX(1); }
+        .timeline-item:hover .timeline-content {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            box-shadow: 0 20px 40px var(--card-hover-shadow);
+        }
+        .timeline-year {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: var(--counter-bg);
+            border: 1px solid var(--counter-border);
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 16px;
+            transition: all 0.5s;
+        }
+        .timeline-year i { font-size: 11px; }
+        .timeline-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+            transition: color 0.5s;
+        }
+        .timeline-subtitle {
+            font-size: 14px;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 12px;
+            transition: color 0.5s;
+        }
+        .timeline-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 16px;
+            transition: color 0.5s;
+        }
+        .timeline-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .timeline-tag {
+            padding: 4px 12px;
+            background: var(--skill-item-bg);
+            border-radius: 20px;
+            font-size: 11px;
+            color: var(--text-muted);
+            transition: all 0.2s, background 0.5s, color 0.5s;
+        }
+        .timeline-tag:hover {
+            background: var(--skill-item-hover);
+            color: var(--accent);
+        }
+        .timeline-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 16px;
+            background: var(--counter-bg);
+            border: 1px solid var(--counter-border);
+            color: var(--accent);
+            transition: all 0.5s;
+        }
+        .timeline-item:hover .timeline-icon {
+            transform: scale(1.1) rotate(-5deg);
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
         .footer { padding: 80px 60px; text-align: center; border-top: 1px solid var(--border); scroll-snap-align: start; transition: border-color 0.5s; }
         .footer h2 { font-family: 'Playfair Display', serif; font-size: clamp(32px, 5vw, 56px); margin-bottom: 24px; color: var(--text); transition: color 0.5s; }
         .footer p { color: var(--text-muted); margin-bottom: 40px; font-size: 16px; transition: color 0.5s; }
@@ -491,12 +726,19 @@
         .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s ease; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
+        .shimmer { position: relative; overflow: hidden; }
+        .shimmer::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer { 0% { left: -100%; } 100% { left: 200%; } }
+
         .float-animation { animation: float 6s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-        .shimmer { position: relative; overflow: hidden; }
-        .shimmer::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); animation: shimmer 3s infinite; }
-        @keyframes shimmer { 0% { left: -100%; } 100% { left: 200%; } }
 
         @media (max-width: 900px) {
             .hero { padding: 0 24px 80px; }
@@ -516,18 +758,18 @@
             .theme-toggle { right: 20px; top: 70px; width: 40px; height: 40px; font-size: 16px; }
             .linkedin-hero { padding: 10px 20px; flex-wrap: wrap; gap: 8px; }
             .linkedin-hero .linkedin-text { font-size: 12px; }
+            .timeline-track::before { left: 20px; }
+            .timeline-item { flex-direction: row !important; }
+            .timeline-item .timeline-content { margin-left: 50px !important; margin-right: 0 !important; }
+            .timeline-item .timeline-dot { left: 20px !important; margin-left: -8px !important; right: auto !important; }
+            .timeline-section { padding: 80px 24px; }
+            .timeline-item { margin-bottom: 40px; }
+            .timeline-content { max-width: none; padding: 24px; }
         }
     </style>
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4ZQ1EZ90DV"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-4ZQ1EZ90DV');
-    </script>
 </head>
 <body>
+    <!-- LinkedIn Banner -->
     <div class="linkedin-hero" id="linkedinBanner">
         <div class="linkedin-icon"><i class="fab fa-linkedin-in"></i></div>
         <span class="linkedin-text">Let's connect on <strong>LinkedIn</strong> — open to new grad opportunities!</span>
@@ -535,12 +777,18 @@
         <button class="linkedin-close" onclick="document.getElementById('linkedinBanner').style.display='none';"><i class="fas fa-times"></i></button>
     </div>
 
+    <!-- Theme Toggle -->
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
         <i class="fas fa-moon" id="themeIcon"></i>
     </button>
 
     <nav class="nav">
-        <div class="nav-brand">Karthik Urala</div>
+        <div class="nav-left">
+            <div class="nav-brand">Karthik Urala</div>
+            <a href="#timeline" class="nav-timeline-toggle" onclick="scrollToTimeline(event)">
+                <i class="fas fa-route"></i> My Journey
+            </a>
+        </div>
         <div class="nav-right">
             <div class="nav-location">Ottawa, Canada</div>
             <div class="nav-view-counter">
@@ -637,6 +885,145 @@
         </div>
     </section>
 
+    <!-- Timeline Section -->
+    <section class="timeline-section" id="timeline">
+        <div class="timeline-container">
+            <div class="timeline-header reveal">
+                <div class="about-label">My Journey</div>
+                <h2 class="about-title">The Road So Far</h2>
+                <p>From business intelligence to cloud engineering — every step has been a building block.</p>
+            </div>
+            <div class="timeline-track">
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-icon"><i class="fas fa-plane-departure"></i></div>
+                        <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2022</div>
+                        <h3 class="timeline-title">Moved to Canada</h3>
+                        <div class="timeline-subtitle">New Beginnings</div>
+                        <p class="timeline-desc">Relocated to Ottawa, Ontario to pursue higher education and build a career in tech. Embraced a new country, culture, and opportunities.</p>
+                        <div class="timeline-tags">
+                            <span class="timeline-tag">Immigration</span>
+                            <span class="timeline-tag">Ottawa</span>
+                            <span class="timeline-tag">New Start</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-icon"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2022</div>
+                        <h3 class="timeline-title">Started BISI Program</h3>
+                        <div class="timeline-subtitle">Algonquin College</div>
+                        <p class="timeline-desc">Began Business Intelligence Systems Infrastructure — diving into data analytics, ETL processes, Power BI, Tableau, and database systems.</p>
+                        <div class="timeline-tags">
+                            <span class="timeline-tag">Data Analytics</span>
+                            <span class="timeline-tag">Power BI</span>
+                            <span class="timeline-tag">Tableau</span>
+                            <span class="timeline-tag">ETL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-icon"><i class="fas fa-chart-bar"></i></div>
+                        <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2023</div>
+                        <h3 class="timeline-title">First Data Projects</h3>
+                        <div class="timeline-subtitle">Hands-On Learning</div>
+                        <p class="timeline-desc">Built foundational projects in Python, Pandas, and NumPy. Created visualizations and dashboards that turned raw data into actionable insights.</p>
+                        <div class="timeline-tags">
+                            <span class="timeline-tag">Python</span>
+                            <span class="timeline-tag">Pandas</span>
+                            <span class="timeline-tag">NumPy</span>
+                            <span class="timeline-tag">Visualization</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-icon"><i class="fas fa-award"></i></div>
+                        <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2024</div>
+                        <h3 class="timeline-title">Completed BISI Diploma</h3>
+                        <div class="timeline-subtitle">Algonquin College</div>
+                        <p class="timeline-desc">Graduated with a diploma in Business Intelligence Systems Infrastructure. Mastered data cleaning, generating insights, and business intelligence tools.</p>
+                        <div class="timeline-tags">
+                            <span class="timeline-tag">Graduation</span>
+                            <span class="timeline-tag">Business Intelligence</span>
+                            <span class="timeline-tag">Data Cleaning</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-icon"><i class="fas fa-cloud"></i></div>
+                        <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2024</div>
+                        <h3 class="timeline-title">Started Cloud Development</h3>
+                        <div class="timeline-subtitle">Algonquin College</div>
+                        <p class="timeline-desc">Pivoted into cloud engineering — learning Azure, Terraform, microservices, serverless architecture, and Infrastructure as Code.</p>
+                        <div class="timeline-tags">
+                            <span class="timeline-tag">Azure</span>
+                            <span class="timeline-tag">Terraform</span>
+                            <span class="timeline-tag">Cloud</span>
+                            <span class="timeline-tag">IaC</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-icon"><i class="fas fa-rocket"></i></div>
+                        <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2025</div>
+                        <h3 class="timeline-title">Capstone & Real Projects</h3>
+                        <div class="timeline-subtitle">Health Canada Collaboration</div>
+                        <p class="timeline-desc">Led the Health Canada Workforce Forecasting capstone. Built real-time pipelines, AI-powered PDF summarizers, and microservices architectures.</p>
+                        <div class="timeline-tags">
+                            <span class="timeline-tag">Capstone</span>
+                            <span class="timeline-tag">Health Canada</span>
+                            <span class="timeline-tag">AI/ML</span>
+                            <span class="timeline-tag">Microservices</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-icon"><i class="fas fa-certificate"></i></div>
+                        <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2026</div>
+                        <h3 class="timeline-title">Cloud Dev Graduation</h3>
+                        <div class="timeline-subtitle">Algonquin College</div>
+                        <p class="timeline-desc">Completing Cloud Development program with expertise in cloud infrastructure, DevOps, CI/CD, and scalable cloud-native solutions.</p>
+                        <div class="timeline-tags">
+                            <span class="timeline-tag">Graduation</span>
+                            <span class="timeline-tag">Cloud Engineering</span>
+                            <span class="timeline-tag">DevOps</span>
+                            <span class="timeline-tag">CI/CD</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-icon"><i class="fas fa-briefcase"></i></div>
+                        <div class="timeline-year"><i class="fas fa-calendar-alt"></i> 2026</div>
+                        <h3 class="timeline-title">Seeking New Opportunities</h3>
+                        <div class="timeline-subtitle">Open to New Grad Roles</div>
+                        <p class="timeline-desc">Actively seeking new grad opportunities in Data Engineering, Cloud Development, and Analytics. Ready to build the future with data and cloud.</p>
+                        <div class="timeline-tags">
+                            <span class="timeline-tag">Job Search</span>
+                            <span class="timeline-tag">Data Engineering</span>
+                            <span class="timeline-tag">Cloud</span>
+                            <span class="timeline-tag">New Grad</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer class="footer">
         <div class="reveal">
             <h2>Let's Build Something Together</h2>
@@ -689,6 +1076,89 @@
         }, { threshold: 0.1 });
         reveals.forEach(el => revealObserver.observe(el));
 
+        const timelineItems = document.querySelectorAll('.timeline-item.reveal');
+        const timelineObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => { entry.target.classList.add('active'); }, index * 150);
+                }
+            });
+        }, { threshold: 0.15 });
+        timelineItems.forEach(item => timelineObserver.observe(item));
+
+        const counters = document.querySelectorAll('[data-count]');
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = parseInt(entry.target.getAttribute('data-count'));
+                    animateCounter(entry.target, target);
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        counters.forEach(counter => counterObserver.observe(counter));
+
+        function animateCounter(element, target) {
+            const duration = 2000;
+            const start = performance.now();
+            function update(currentTime) {
+                const elapsed = currentTime - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(easeOut * target);
+                element.textContent = current;
+                if (progress < 1) { requestAnimationFrame(update); } else { element.textContent = target; }
+            }
+            request
+                <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        function toggleTheme() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.classList.add('spin');
+            setTimeout(() => themeToggle.classList.remove('spin'), 500);
+            updateThemeIcon(newTheme);
+        }
+        function updateThemeIcon(theme) { themeIcon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon'; }
+
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        const reveals = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => { entry.target.classList.add('active'); }, index * 100);
+                }
+            });
+        }, { threshold: 0.1 });
+        reveals.forEach(el => revealObserver.observe(el));
+
+        const timelineItems = document.querySelectorAll('.timeline-item.reveal');
+        const timelineObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => { entry.target.classList.add('active'); }, index * 150);
+                }
+            });
+        }, { threshold: 0.15 });
+        timelineItems.forEach(item => timelineObserver.observe(item));
+
         const counters = document.querySelectorAll('[data-count]');
         const counterObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -716,79 +1186,41 @@
         }
 
         const nav = document.querySelector('.nav');
-        let lastScroll = 0;
         window.addEventListener('scroll', () => {
             const currentScroll = window.pageYOffset;
-            if (currentScroll > 100) { nav.style.padding = '12px 40px'; } else { nav.style.padding = '20px 40px'; }
-            lastScroll = currentScroll;
+            nav.style.padding = currentScroll > 100 ? '12px 40px' : '20px 40px';
         });
 
         const heroPhoto = document.querySelector('.hero-photo');
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
-            if (scrolled < window.innerHeight) { heroPhoto.style.transform = `translateY(${scrolled * 0.3}px) scale(${1 + scrolled * 0.0002})`; }
+            if (scrolled < window.innerHeight) {
+                heroPhoto.style.transform = `translateY(${scrolled * 0.3}px) scale(${1 + scrolled * 0.0002})`;
+            }
         });
 
-        // ========== VIEW COUNTER (Visitor Badge) ==========
-        // Uses hits.seeyoufarm.com - reliable visitor counter for static sites
-        // Updates globally for all visitors
+        function scrollToTimeline(e) {
+            if (e) e.preventDefault();
+            const timeline = document.getElementById('timeline');
+            if (timeline) {
+                timeline.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
         function initViewCounter() {
             const navCounterValue = document.getElementById('navCounterValue');
             if (!navCounterValue) return;
-
-            // Create a hidden image to trigger the counter API
-            const img = new Image();
-            img.style.display = 'none';
-
-            // This URL increments the counter and returns the count
-            // Using a unique namespace for your portfolio
-            const counterUrl = 'https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fkarthikurala.github.io%2F&count_bg=%23E94560&title_bg=%231A1A2E&icon=&icon_color=%23E7E7E7&title=Views&edge_flat=false';
-
-            img.onload = function() {
-                // Extract count from the SVG (the badge shows the number)
-                // We'll fetch the SVG text to parse the number
-                fetch(counterUrl)
-                    .then(r => r.text())
-                    .then(svgText => {
-                        // Extract number from SVG text content
-                        const match = svgText.match(/>([\d,]+)</);
-                        if (match) {
-                            const count = parseInt(match[1].replace(/,/g, ''));
-                            animateCounterDisplay(navCounterValue, count);
-                            localStorage.setItem('portfolio_view_count', count);
-                        }
-                    })
-                    .catch(() => {
-                        // Fallback to stored count
-                        const stored = localStorage.getItem('portfolio_view_count');
-                        navCounterValue.textContent = stored ? parseInt(stored).toLocaleString() : '...';
-                    });
-            };
-
-            img.onerror = function() {
-                const stored = localStorage.getItem('portfolio_view_count');
-                navCounterValue.textContent = stored ? parseInt(stored).toLocaleString() : '...';
-            };
-
-            img.src = counterUrl;
-        }
-
-        function animateCounterDisplay(element, target) {
-            if (!element) return;
-            element.classList.add('counting');
-            const duration = 1500;
-            const start = performance.now();
-            function update(currentTime) {
-                const elapsed = currentTime - start;
-                const progress = Math.min(elapsed / duration, 1);
-                const easeOut = 1 - Math.pow(1 - progress, 3);
-                const current = Math.floor(easeOut * target);
-                element.textContent = current.toLocaleString();
-                if (progress < 1) { requestAnimationFrame(update); } else { element.textContent = target.toLocaleString(); element.classList.remove('counting'); }
+            let count = parseInt(localStorage.getItem('portfolio_view_count') || '0');
+            const lastVisit = sessionStorage.getItem('portfolio_last_visit');
+            const now = Date.now();
+            const isNewSession = !lastVisit || (now - parseInt(lastVisit)) > 30 * 60 * 1000;
+            if (isNewSession) {
+                count++;
+                localStorage.setItem('portfolio_view_count', count);
+                sessionStorage.setItem('portfolio_last_visit', now.toString());
             }
-            requestAnimationFrame(update);
+            navCounterValue.textContent = count.toLocaleString();
         }
-
         initViewCounter();
     </script>
 </body>
